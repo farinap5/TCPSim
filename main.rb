@@ -51,6 +51,8 @@ class TCP
             in ["ESTABLISHED", "close"] # close by the application.
                 @estado = "FIN_WAIT_1"
                 return "FIN"
+            in ["ESTABLISHED", "ACK"]
+                return "ACK"
             
             # Fin_Wait_1
             in ["FIN_WAIT_1","ACK"]
@@ -94,7 +96,7 @@ tcp = TCP.new()
 print("State: "+tcp.estado+"\n")
 input = ""
 loop do
-    if %w(ESTABILISHED SYN_RCVD SYN_SENT).include? tcp.estado
+    if %w(SYN_RCVD SYN_SENT TIME_WAIT).include? tcp.estado
         begin
             Timeout::timeout(15) {
                 print("SEND: ")
@@ -106,16 +108,13 @@ loop do
 
         rescue Timeout::Error
             print("TIMEOUT\n")
-            
-            case [tcp.estado]
-            in ["TIME_WAIT","SYN_RCVD","SYN_SENT"]
-                tcp.estado = "CLOSED"
-            end
-        end
+            tcp.estado = "CLOSED"
+            print("Received From Remote Machine: " + tcp.recv(input)+"\n")
+        end    
     else
         print("SEND: ")
         input = gets()
         print("Received From Remote Machine: " + tcp.recv(input)+"\n")
         print("Remote Machine State: "+tcp.estado+"\n\n")
-    end
+end
 end
