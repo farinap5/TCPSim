@@ -1,4 +1,4 @@
-# TCP Simulation
+# State Machine - TCP Simulation
 
 ![](https://www.ibm.com/docs/en/SSLTBW_2.1.0/com.ibm.zos.v2r1.halu101/dwgl0004.gif)
 

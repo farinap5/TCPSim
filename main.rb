@@ -96,26 +96,26 @@ input = ""
 loop do
     if %w(ESTABILISHED SYN_RCVD SYN_SENT).include? tcp.estado
         begin
-            Timeout::timeout(50) {
+            Timeout::timeout(15) {
                 print("SEND: ")
                 input = gets()
             }
 
-            print("Received" + tcp.recv(input)+"\n")
+            print("Received From Remote Machine: " + tcp.recv(input)+"\n")
             print("Remote Machine State: "+tcp.estado+"\n\n")
 
         rescue Timeout::Error
             print("TIMEOUT\n")
             
             case [tcp.estado]
-            in ["TIME_WAIT"]
+            in ["TIME_WAIT","SYN_RCVD","SYN_SENT"]
                 tcp.estado = "CLOSED"
             end
         end
     else
         print("SEND: ")
         input = gets()
-        print("Received" + tcp.recv(input)+"\n")
+        print("Received From Remote Machine: " + tcp.recv(input)+"\n")
         print("Remote Machine State: "+tcp.estado+"\n\n")
     end
 end
